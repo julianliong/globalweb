@@ -1,0 +1,61 @@
+---
+// import Welcome from "../../components/Welcome.astro"
+import { render } from "astro:content";
+import Nav from "../../components/Nav.astro"
+import Overview from "../../components/Overview.astro"
+
+import { getCollection } from "astro:content";
+// getStaticPaths
+export async function getStaticPaths(){
+    let blog = await getCollection("blog")
+    
+    // @ts-ignore
+    const results = []
+    // new object with properties
+    // "params": {"id": number/string}
+    // "props": {complicated object}
+    // {}
+
+    blog.forEach(post => {
+        results.push({
+            params: {
+                "id": post.id
+            },
+            props: {post}
+        })
+    })
+
+    // @ts-ignore
+    return results
+}
+// const obj1 {key_1: 1, key_2: 2}
+// const {key_1, key_2} = obj1 
+const {post} = Astro.props
+const {Content} = await render(post)
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+    <p>This is my blog post</p>
+    <Nav/>
+    <Overview/>
+    <Content/>
+</body>
+</html>
+<!--
+* Post Overviews (choose all)
+    * title
+    * First x-ish words/characters below (maybe)
+    * Tags/categories (programming, cooking, funny)
+    * Date, Length
+* Navbar
+
+|| Later ||
+* Categories? -- Optional 
+* Page numbers (if you have a lot of posts)
+-->
